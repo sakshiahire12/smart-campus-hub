@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Requests - Smart Campus Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        .request-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .request-id {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .issue {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .status {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .submitted {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 14px;
+            color: #6b7280;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            background: #111827;
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+
+            .top-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Smart Campus Hub
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/create-request">
+                Create Request
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>
+                My Requests
+            </h1>
+
+            <p>
+                Track all your submitted campus service requests.
+            </p>
+
+        </div>
+
+
+        {% if requests %}
+
+            {% for item in requests %}
+
+                <div class="request-card">
+
+                    <div class="top-row">
+
+                        <div>
+
+                            <div class="request-id">
+                                Request #{{ item[0] }}
+                            </div>
+
+                            <div class="issue">
+                                {{ item[2] }}
+                            </div>
+
+                        </div>
+
+
+                        {% if item[6] == "Submitted" %}
+
+                            <div class="status submitted">
+                                Submitted
+                            </div>
+
+                        {% elif item[6] == "In Progress" %}
+
+                            <div class="status progress">
+                                In Progress
+                            </div>
+
+                        {% elif item[6] == "Resolved" %}
+
+                            <div class="status resolved">
+                                Resolved
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="details">
+
+                        <div>
+                            <strong>Category:</strong>
+                            {{ item[1] }}
+                        </div>
+
+                        <div>
+                            <strong>Location:</strong>
+                            {{ item[3] }}
+                        </div>
+
+                        <div>
+                            <strong>Priority:</strong>
+                            {{ item[4] }}
+                        </div>
+
+                        <div>
+                            <strong>Description:</strong>
+                            {{ item[5] }}
+                        </div>
+
+                        <div>
+                            <strong>Submitted:</strong>
+                            {{ item[7] }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <h2>
+                    No requests yet
+                </h2>
+
+                <p>
+                    Create your first campus service request.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <a href="/" class="back">
+            ← Back to Home
+        </a>
+
+    </div>
+
+
+    <footer>
+        Smart Campus Hub • College Service Management System
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Smart Campus Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f4f6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #222;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 950px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .left-panel {
+            background: #111827;
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h1 {
+            font-size: 42px;
+            margin-bottom: 18px;
+            line-height: 1.15;
+        }
+
+        .left-panel p {
+            color: #d1d5db;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .feature-list {
+            margin-top: 30px;
+        }
+
+        .feature {
+            margin-bottom: 15px;
+            color: #e5e7eb;
+        }
+
+        .right-panel {
+            padding: 50px;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 28px;
+            color: #111827;
+        }
+
+        .right-panel h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 28px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .demo-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                padding: 35px;
+            }
+
+            .left-panel h1 {
+                font-size: 34px;
+            }
+
+            .right-panel {
+                padding: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+
+        <div class="left-panel">
+
+            <h1>
+                Smart Campus Hub
+            </h1>
+
+            <p>
+                A simple digital platform for managing
+                college service requests and tracking
+                their progress.
+            </p>
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    ✓ Create campus service requests
+                </div>
+
+                <div class="feature">
+                    ✓ Track request status
+                </div>
+
+                <div class="feature">
+                    ✓ Connect with campus administration
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="right-panel">
+
+            <div class="brand">
+                Campus Portal
+            </div>
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p class="subtitle">
+                Login to access your campus services.
+            </p>
+
+
+            {% if error %}
+
+                <div class="error">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST" action="/login">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    required
+                    autocomplete="username"
+                >
+
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                >
+
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
+
+
+            <div class="demo-box">
+
+                <strong>Student Demo</strong><br>
+                Username: student<br>
+                Password: student123
+
+                <br><br>
+
+                <strong>Admin Demo</strong><br>
+                Username: admin<br>
+                Password: admin123
+
+            </div>
+
+
+            <a href="/" class="back">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

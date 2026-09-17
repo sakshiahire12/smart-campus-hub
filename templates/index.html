@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Campus Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #93c5fd;
+        }
+
+        .welcome {
+            background: #374151;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout {
+            background: #dc2626;
+            padding: 9px 15px;
+            border-radius: 7px;
+        }
+
+        .logout:hover {
+            background: #b91c1c;
+            color: white !important;
+        }
+
+        .hero {
+            background: white;
+            padding: 60px 8%;
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            color: #6b7280;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .secondary:hover {
+            background: #d1d5db;
+        }
+
+        .summary {
+            padding: 50px 8% 25px;
+        }
+
+        .summary h2,
+        .recent h2,
+        .services h2 {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .recent {
+            padding: 25px 8% 55px;
+        }
+
+        .request-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 18px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .request-id {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .issue {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .details {
+            margin-top: 12px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .status {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .submitted {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .view-all {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .services {
+            padding: 10px 8% 55px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .card p {
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .quick-access {
+            padding: 10px 8% 60px;
+        }
+
+        .quick-box {
+            background: #111827;
+            color: white;
+            padding: 35px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .quick-box h2 {
+            margin-bottom: 10px;
+        }
+
+        .quick-box p {
+            color: #d1d5db;
+            margin-bottom: 22px;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        footer {
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .hero,
+            .summary,
+            .recent,
+            .services,
+            .quick-access {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .request-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Smart Campus Hub
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            {% if session.get("user_id") %}
+
+                <a href="/create-request">
+                    Create Request
+                </a>
+
+                <a href="/my-requests">
+                    My Requests
+                </a>
+
+                {% if session.get("role") == "admin" %}
+
+                    <a href="/admin">
+                        Admin Dashboard
+                    </a>
+
+                {% endif %}
+
+                <span class="welcome">
+                    Hi, {{ session.get("username") }}
+                </span>
+
+                <a href="/logout" class="logout">
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a href="/login">
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <section class="hero">
+
+        {% if session.get("user_id") %}
+
+            <h1>
+                Welcome back, {{ session.get("username") }} 👋
+            </h1>
+
+            <p>
+                Manage your campus service requests,
+                track their progress, and stay connected
+                with campus administration.
+            </p>
+
+            <div class="buttons">
+
+                <a href="/create-request" class="btn primary">
+                    Create Request
+                </a>
+
+                <a href="/my-requests" class="btn secondary">
+                    View My Requests
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <h1>
+                One Campus. One Smart Platform.
+            </h1>
+
+            <p>
+                Manage college service requests, track issues,
+                and connect students with campus administration
+                through one simple platform.
+            </p>
+
+            <div class="buttons">
+
+                <a href="/login" class="btn primary">
+                    Login to Continue
+                </a>
+
+                <a href="#services" class="btn secondary">
+                    View Services
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    {% if session.get("user_id") %}
+
+        <section class="summary">
+
+            <h2>
+                My Request Summary
+            </h2>
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <h3>Total Requests</h3>
+                    <p>{{ stats.total }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Submitted</h3>
+                    <p>{{ stats.submitted }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>In Progress</h3>
+                    <p>{{ stats.progress }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Resolved</h3>
+                    <p>{{ stats.resolved }}</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="recent">
+
+            <h2>
+                Recent Requests
+            </h2>
+
+
+            {% if recent_requests %}
+
+                {% for item in recent_requests %}
+
+                    <div class="request-card">
+
+                        <div class="request-top">
+
+                            <div>
+
+                                <div class="request-id">
+                                    Request #{{ item[0] }}
+                                </div>
+
+                                <div class="issue">
+                                    {{ item[2] }}
+                                </div>
+
+                            </div>
+
+
+                            {% if item[6] == "Submitted" %}
+
+                                <div class="status submitted">
+                                    Submitted
+                                </div>
+
+                            {% elif item[6] == "In Progress" %}
+
+                                <div class="status progress">
+                                    In Progress
+                                </div>
+
+                            {% elif item[6] == "Resolved" %}
+
+                                <div class="status resolved">
+                                    Resolved
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="details">
+
+                            <div>
+                                <strong>Category:</strong>
+                                {{ item[1] }}
+                            </div>
+
+                            <div>
+                                <strong>Location:</strong>
+                                {{ item[3] }}
+                            </div>
+
+                            <div>
+                                <strong>Priority:</strong>
+                                {{ item[4] }}
+                            </div>
+
+                            <div>
+                                <strong>Submitted:</strong>
+                                {{ item[7] }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <div class="view-all">
+
+                    <a href="/my-requests" class="btn secondary">
+                        View All Requests
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty">
+
+                    <h3>
+                        No requests yet
+                    </h3>
+
+                    <p>
+                        Create your first campus service request.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    {% endif %}
+
+
+    <section class="services" id="services">
+
+        <h2>
+            Campus Services
+        </h2>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>
+                    🖥️ Lab Support
+                </h3>
+
+                <p>
+                    Report computer, network or
+                    laboratory-related issues and
+                    track their status.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    🪪 ID Card Requests
+                </h3>
+
+                <p>
+                    Submit and track student ID card
+                    related service requests.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    📚 Library Support
+                </h3>
+
+                <p>
+                    Raise and track library-related
+                    service requests through one platform.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="quick-access">
+
+        <div class="quick-box">
+
+            {% if session.get("user_id") %}
+
+                <h2>
+                    Need Campus Support?
+                </h2>
+
+                <p>
+                    Create a request and track its
+                    progress from My Requests.
+                </p>
+
+                <a href="/create-request" class="btn primary">
+                    Submit a Request
+                </a>
+
+            {% else %}
+
+                <h2>
+                    Smart Campus Support
+                </h2>
+
+                <p>
+                    Login to create and track your
+                    campus service requests.
+                </p>
+
+                <a href="/login" class="btn primary">
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        Smart Campus Hub • College Service Management System
+    </footer>
+
+</body>
+</html>

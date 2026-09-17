@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Request - Smart Campus Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            background: #111827;
+            color: white;
+        }
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .container {
+                margin: 30px 15px;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Smart Campus Hub
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/my-requests">
+                My Requests
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <h1>
+            Create New Request
+        </h1>
+
+        <p class="subtitle">
+            Submit your campus service request below.
+        </p>
+
+
+        {% if success %}
+
+            <div class="success-message">
+                ✅ Request submitted successfully!
+            </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+            <div class="error-message">
+                ⚠️ {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST" action="/create-request">
+
+            <label for="category">
+                Category
+            </label>
+
+            <select id="category" name="category" required>
+
+                <option value="">
+                    Select category
+                </option>
+
+                <option value="Lab">
+                    Lab
+                </option>
+
+                <option value="Library">
+                    Library
+                </option>
+
+                <option value="ID Card">
+                    ID Card
+                </option>
+
+                <option value="Network">
+                    Network
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <label for="issue">
+                Issue
+            </label>
+
+            <input
+                type="text"
+                id="issue"
+                name="issue"
+                placeholder="Enter your issue"
+                maxlength="100"
+                required
+            >
+
+
+            <label for="room">
+                Room / Location
+            </label>
+
+            <input
+                type="text"
+                id="room"
+                name="room"
+                placeholder="Example: Lab 204"
+                maxlength="100"
+                required
+            >
+
+
+            <label for="priority">
+                Priority
+            </label>
+
+            <select id="priority" name="priority" required>
+
+                <option value="">
+                    Select priority
+                </option>
+
+                <option value="Low">
+                    Low
+                </option>
+
+                <option value="Medium">
+                    Medium
+                </option>
+
+                <option value="High">
+                    High
+                </option>
+
+            </select>
+
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe the problem..."
+                maxlength="500"
+                required
+            ></textarea>
+
+
+            <button type="submit">
+                Submit Request
+            </button>
+
+        </form>
+
+
+        <a href="/" class="back">
+            ← Back to Home
+        </a>
+
+    </div>
+
+
+    <footer>
+        Smart Campus Hub • College Service Management System
+    </footer>
+
+</body>
+</html>
