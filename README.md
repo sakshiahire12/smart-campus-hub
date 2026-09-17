@@ -30,14 +30,6 @@ Smart Campus Hub is a web-based college service management system that allows st
 
 Student Login → Create Request → Request Saved in Database → Admin Reviews Request → Admin Updates Status → Student Tracks Status
 
-## Demo Login
-
-Student:
-`student / student123`
-
-Admin:
-`admin / admin123`
-
 ## How to Run
 
 ```bash
