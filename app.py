@@ -2,13 +2,28 @@ from flask import Flask, render_template, request, redirect, url_for, session, a
 import sqlite3
 from functools import wraps
 from datetime import datetime
+import os
+
+from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
+# Load environment variables from .env during local development
+load_dotenv()
+
 
 app = Flask(__name__)
 
-# For local project testing
-app.secret_key = "smart-campus-hub-demo-key"
+# Secret key is taken from environment variable
+app.secret_key = os.getenv(
+    "SECRET_KEY",
+    "local-development-secret-key"
+)
 
+
+# --------------------------------------------------
+# DATABASE
+# --------------------------------------------------
 
 def get_db():
     return sqlite3.connect("database.db")
@@ -18,9 +33,25 @@ def get_current_time():
     return datetime.now().strftime("%d %b %Y, %I:%M %p")
 
 
+# --------------------------------------------------
+# DATABASE INITIALIZATION
+# --------------------------------------------------
+
 def init_db():
+
+    # Read passwords from environment variables
+    student_password = os.getenv("STUDENT_PASSWORD")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+
+    # Stop startup if passwords are not configured
+    if not student_password or not admin_password:
+        raise RuntimeError(
+            "STUDENT_PASSWORD and ADMIN_PASSWORD environment variables are required."
+        )
+
     connection = get_db()
 
+    # Users table
     connection.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,6 +61,7 @@ def init_db():
         )
     """)
 
+    # Requests table
     connection.execute("""
         CREATE TABLE IF NOT EXISTS requests (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,6 +74,7 @@ def init_db():
         )
     """)
 
+    # Check existing columns
     columns = [
         row[1]
         for row in connection.execute(
@@ -49,12 +82,14 @@ def init_db():
         ).fetchall()
     ]
 
+    # Add user_id if missing
     if "user_id" not in columns:
         connection.execute("""
             ALTER TABLE requests
             ADD COLUMN user_id INTEGER
         """)
 
+    # Add created_at if missing
     if "created_at" not in columns:
         connection.execute("""
             ALTER TABLE requests
@@ -70,12 +105,19 @@ def init_db():
             (get_current_time(),)
         )
 
+    # --------------------------------------------------
+    # STUDENT ACCOUNT
+    # --------------------------------------------------
+
     student = connection.execute(
         "SELECT id FROM users WHERE username = ?",
         ("student",)
     ).fetchone()
 
+    student_hashed_password = generate_password_hash(student_password)
+
     if student is None:
+
         connection.execute(
             """
             INSERT INTO users (username, password, role)
@@ -83,17 +125,40 @@ def init_db():
             """,
             (
                 "student",
-                generate_password_hash("student123"),
+                student_hashed_password,
                 "student"
             )
         )
+
+    else:
+
+        # Keep password synced with environment variable
+        connection.execute(
+            """
+            UPDATE users
+            SET password = ?, role = ?
+            WHERE username = ?
+            """,
+            (
+                student_hashed_password,
+                "student",
+                "student"
+            )
+        )
+
+    # --------------------------------------------------
+    # ADMIN ACCOUNT
+    # --------------------------------------------------
 
     admin = connection.execute(
         "SELECT id FROM users WHERE username = ?",
         ("admin",)
     ).fetchone()
 
+    admin_hashed_password = generate_password_hash(admin_password)
+
     if admin is None:
+
         connection.execute(
             """
             INSERT INTO users (username, password, role)
@@ -101,7 +166,23 @@ def init_db():
             """,
             (
                 "admin",
-                generate_password_hash("admin123"),
+                admin_hashed_password,
+                "admin"
+            )
+        )
+
+    else:
+
+        # Keep password synced with environment variable
+        connection.execute(
+            """
+            UPDATE users
+            SET password = ?, role = ?
+            WHERE username = ?
+            """,
+            (
+                admin_hashed_password,
+                "admin",
                 "admin"
             )
         )
@@ -110,7 +191,12 @@ def init_db():
     connection.close()
 
 
+# --------------------------------------------------
+# LOGIN DECORATORS
+# --------------------------------------------------
+
 def login_required(function):
+
     @wraps(function)
     def wrapper(*args, **kwargs):
 
@@ -123,6 +209,7 @@ def login_required(function):
 
 
 def admin_required(function):
+
     @wraps(function)
     def wrapper(*args, **kwargs):
 
@@ -136,6 +223,10 @@ def admin_required(function):
 
     return wrapper
 
+
+# --------------------------------------------------
+# HOME
+# --------------------------------------------------
 
 @app.route("/")
 def home():
@@ -227,13 +318,24 @@ def home():
     )
 
 
+# --------------------------------------------------
+# LOGIN
+# --------------------------------------------------
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        username = request.form["username"].strip()
-        password = request.form["password"]
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        if not username or not password:
+
+            return render_template(
+                "login.html",
+                error="Please enter username and password."
+            )
 
         connection = get_db()
 
@@ -267,6 +369,10 @@ def login():
     return render_template("login.html")
 
 
+# --------------------------------------------------
+# LOGOUT
+# --------------------------------------------------
+
 @app.route("/logout")
 def logout():
 
@@ -274,6 +380,10 @@ def logout():
 
     return redirect(url_for("login"))
 
+
+# --------------------------------------------------
+# CREATE REQUEST
+# --------------------------------------------------
 
 @app.route("/create-request", methods=["GET", "POST"])
 @login_required
@@ -301,7 +411,7 @@ def create_request():
             "High"
         }
 
-        # Server-side validation
+        # Required fields
         if not category or not issue or not room or not priority or not description:
 
             return render_template(
@@ -309,6 +419,7 @@ def create_request():
                 error="Please fill in all fields before submitting."
             )
 
+        # Valid category
         if category not in allowed_categories:
 
             return render_template(
@@ -316,6 +427,7 @@ def create_request():
                 error="Please select a valid category."
             )
 
+        # Valid priority
         if priority not in allowed_priorities:
 
             return render_template(
@@ -323,6 +435,7 @@ def create_request():
                 error="Please select a valid priority."
             )
 
+        # Length validation
         if len(issue) > 100:
 
             return render_template(
@@ -390,6 +503,10 @@ def create_request():
     )
 
 
+# --------------------------------------------------
+# MY REQUESTS
+# --------------------------------------------------
+
 @app.route("/my-requests")
 @login_required
 def my_requests():
@@ -422,6 +539,10 @@ def my_requests():
     )
 
 
+# --------------------------------------------------
+# ADMIN DASHBOARD
+# --------------------------------------------------
+
 @app.route("/admin")
 @admin_required
 def admin_dashboard():
@@ -451,6 +572,10 @@ def admin_dashboard():
         requests=all_requests
     )
 
+
+# --------------------------------------------------
+# UPDATE STATUS
+# --------------------------------------------------
 
 @app.route("/update-status/<int:request_id>", methods=["POST"])
 @admin_required
@@ -484,7 +609,16 @@ def update_status(request_id):
     return redirect(url_for("admin_dashboard"))
 
 
+# --------------------------------------------------
+# INITIALIZE DATABASE
+# --------------------------------------------------
+
 init_db()
+
+
+# --------------------------------------------------
+# RUN APP
+# --------------------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
